@@ -5,6 +5,16 @@ function Player(life, armor, attack, gold, cards, upgrades) {
     this.gold = gold,
     this.cards = cards,
     this.upgrades = upgrades
+    this.throwCard = function() {
+        alert(`Tus cartas son: 1. ${this.cards[0].number} de ${this.cards[0].suit}. 2. ${this.cards[1].number} de ${this.cards[1].suit}. 3. ${this.cards[2].number} de ${this.cards[2].suit}`);
+        console.log(`Las cartas de tu mano eran: ${this.cards[0].number} de ${this.cards[0].suit}. 2. ${this.cards[1].number} de ${this.cards[1].suit}. 3. ${this.cards[2].number} de ${this.cards[2].suit}`);
+        const input = prompt("Seleccione la posición de la carta");
+        const index = parseInt(input) - 1;
+        const removedCard = this.cards.splice(index, 1);
+        alert(`Tiraste la carta ${removedCard[0].number} de ${removedCard[0].suit}`);
+        console.log("Las cartas que te quedan son:");
+        console.log(this.cards);
+    }
 }
 
 const deck = [
@@ -63,3 +73,5 @@ const PC = new Player(100, 100, 0, 100, shuffledDeck.slice(3, 6), []);
 
 console.log(Player1);
 console.log(PC);
+
+Player1.throwCard();
