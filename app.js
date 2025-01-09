@@ -96,13 +96,6 @@ function game() {
 
     console.log(`-------------------------------------------------`);
 
-    console.log(`Tus cartas:`);
-    console.log(`1) ${Player1.cards[0].number} de ${Player1.cards[0].suit}`);
-    console.log(`2) ${Player1.cards[1].number} de ${Player1.cards[1].suit}`);
-    console.log(`3) ${Player1.cards[2].number} de ${Player1.cards[2].suit}`);
-
-    console.log(`-------------------------------------------------`);
-
     let playerPoints = 0;
     let botPoints = 0;
 
@@ -111,15 +104,26 @@ function game() {
         botPointsElement.textContent = botPoints;
     }
 
-    console.log(`Selecciona arriba la posición de la carta que quieres lanzar.`);
+    for(let i = 0; i < 3; i++) {
+        console.log(`Mano N°${i + 1}`);
 
-    const input = prompt("Ingresa la posición de la carta:");
-    const index = parseInt(input) - 1;
-    const cardThrowed = Player1.cards.splice(index, 1);
-    console.log(`Jugaste la carta ${cardThrowed[0].number} de ${cardThrowed[0].suit}`);
-    playerPoints += 1;
-    
-    updatePoints();
+        console.log(`Tus cartas:`);
+        for(let j=0; j < Player1.cards.length; j++) {
+            console.log(`${j+1}) ${Player1.cards[j].number} de ${Player1.cards[j].suit}`);
+        }
+
+        console.log(`-------------------------------------------------`);
+
+        console.log(`Selecciona arriba la posición de la carta que quieres lanzar.`);
+
+        const input = prompt("Ingresa la posición de la carta:");
+        const index = parseInt(input) - 1;
+        const cardThrowed = Player1.cards.splice(index, 1);
+        console.log(`Jugaste la carta ${cardThrowed[0].number} de ${cardThrowed[0].suit}`);
+        
+        console.log(`-------------------------------------------------`);
+
+    }
 }
 
 game();
