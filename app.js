@@ -1,11 +1,18 @@
-function Player(life, armor, attack, gold, cards, upgrades) {
-    this.life = life,
-    this.armor = armor,
-    this.attack = attack,
-    this.gold = gold,
-    this.cards = cards,
-    this.upgrades = upgrades
-    this.throwCard = function() {
+class Player {
+    constructor(life, armor, attack, gold, cards, upgrades) {
+        this.life = life,
+        this.armor = armor,
+        this.attack = attack,
+        this.gold = gold,
+        this.cards = cards,
+        this.upgrades = upgrades
+    }
+
+    showStats() {
+        console.log(`Vida: ${this.life} - Armadura: ${this.armor} - Ataque: ${this.attack} - Oro: ${this.gold}`);
+    }
+
+    throwCard() {
         alert(`Tus cartas son: 1. ${this.cards[0].number} de ${this.cards[0].suit}. 2. ${this.cards[1].number} de ${this.cards[1].suit}. 3. ${this.cards[2].number} de ${this.cards[2].suit}`);
         console.log(`Las cartas de tu mano eran: ${this.cards[0].number} de ${this.cards[0].suit}. 2. ${this.cards[1].number} de ${this.cards[1].suit}. 3. ${this.cards[2].number} de ${this.cards[2].suit}`);
         const input = prompt("Seleccione la posición de la carta");
@@ -14,6 +21,12 @@ function Player(life, armor, attack, gold, cards, upgrades) {
         alert(`Tiraste la carta ${removedCard[0].number} de ${removedCard[0].suit}`);
         console.log("Las cartas que te quedan son:");
         console.log(this.cards);
+    }
+}
+
+class Bot extends Player {
+    constructor(life, armor, attack, gold, cards, upgrades) {
+        super(life, armor, attack, gold, cards, upgrades);
     }
 }
 
@@ -62,16 +75,19 @@ const deck = [
     { number: 4, suit: "Copa", value: 1 }
 ]
 
-function shuffleDeck(deck) {
-    return deck.sort(() => Math.random() - 0.5);
+function game() {
+    console.log(`🗡¡Bienvenido a Trooco!🗡`);
+
+    function shuffleDeck(deck) {
+        return deck.sort(() => Math.random() - 0.5);
+    }
+    const shuffledDeck = shuffleDeck(deck);
+
+    const Player1 = new Player(100, 100, 0, 100, shuffledDeck.slice(0, 3), []);
+    const PC = new Player(100, 100, 0, 100, shuffledDeck.slice(3, 6), []);
+
+    console.log(`Tus estadísticas:`);
+    Player1.showStats();
 }
 
-const shuffledDeck = shuffleDeck(deck);
-
-const Player1 = new Player(100, 100, 0, 100, shuffledDeck.slice(0, 3), []);
-const PC = new Player(100, 100, 0, 100, shuffledDeck.slice(3, 6), []);
-
-console.log(Player1);
-console.log(PC);
-
-Player1.throwCard();
+game();
