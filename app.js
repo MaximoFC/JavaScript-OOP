@@ -76,7 +76,12 @@ const deck = [
 ]
 
 function game() {
+    const playerPointsElement = document.getElementById("player-points");
+    const botPointsElement = document.getElementById("bot-points");
+
     console.log(`🗡¡Bienvenido a Trooco!🗡`);
+
+    console.log(`-------------------------------------------------`);
 
     function shuffleDeck(deck) {
         return deck.sort(() => Math.random() - 0.5);
@@ -88,6 +93,33 @@ function game() {
 
     console.log(`Tus estadísticas:`);
     Player1.showStats();
+
+    console.log(`-------------------------------------------------`);
+
+    console.log(`Tus cartas:`);
+    console.log(`1) ${Player1.cards[0].number} de ${Player1.cards[0].suit}`);
+    console.log(`2) ${Player1.cards[1].number} de ${Player1.cards[1].suit}`);
+    console.log(`3) ${Player1.cards[2].number} de ${Player1.cards[2].suit}`);
+
+    console.log(`-------------------------------------------------`);
+
+    let playerPoints = 0;
+    let botPoints = 0;
+
+    function updatePoints() {
+        playerPointsElement.textContent = playerPoints;
+        botPointsElement.textContent = botPoints;
+    }
+
+    console.log(`Selecciona arriba la posición de la carta que quieres lanzar.`);
+
+    const input = prompt("Ingresa la posición de la carta:");
+    const index = parseInt(input) - 1;
+    const cardThrowed = Player1.cards.splice(index, 1);
+    console.log(`Jugaste la carta ${cardThrowed[0].number} de ${cardThrowed[0].suit}`);
+    playerPoints += 1;
+    
+    updatePoints();
 }
 
 game();
