@@ -104,7 +104,20 @@ function game() {
         botPointsElement.textContent = botPoints;
     }
 
+    function winner(playerCardThrowed, botCardThrowed) {
+        if(playerCardThrowed > botCardThrowed) {
+            return "player"
+        }
+        else if(playerCardThrowed < botCardThrowed) {
+            return "bot"
+        }
+        else {
+            return "tie"
+        }
+    }
+
     for(let i = 0; i < 3; i++) {
+        console.log(`-------------------------------------------------`);
         console.log(`Mano N°${i + 1}`);
 
         console.log(`Tus cartas:`);
@@ -118,11 +131,25 @@ function game() {
 
         const input = prompt("Ingresa la posición de la carta:");
         const index = parseInt(input) - 1;
-        const cardThrowed = Player1.cards.splice(index, 1);
-        console.log(`Jugaste la carta ${cardThrowed[0].number} de ${cardThrowed[0].suit}`);
+        const playerCardThrowed = Player1.cards.splice(index, 1);
+        console.log(`Jugaste la carta ${playerCardThrowed[0].number} de ${playerCardThrowed[0].suit}`);
         
-        console.log(`-------------------------------------------------`);
+        const botCardThrowed = PC.cards.pop();
+        console.log(`La computadora jugó ${botCardThrowed.number} de ${botCardThrowed.suit}`);
 
+        const trickWinner = winner(playerCardThrowed[0].value, botCardThrowed.value);
+
+        if(trickWinner === "player") {
+            playerPoints += 1;
+            console.log(`¡Ganaste la mano!`);
+        } 
+        else if(trickWinner === "bot") {
+            botPoints += 1;
+            console.log(`La computadora ganó la mano`);
+        }
+        else {
+            console.log(`Empataste la mano`);
+        }
     }
 }
 
