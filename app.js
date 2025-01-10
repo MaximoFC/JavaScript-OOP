@@ -76,6 +76,8 @@ const deck = [
 ]
 
 function game() {
+    const trickPlayerPointsElement = document.getElementById("trick-player-points");
+    const trickBotPointsElement = document.getElementById("trick-bot-points");
     const playerPointsElement = document.getElementById("player-points");
     const botPointsElement = document.getElementById("bot-points");
 
@@ -86,10 +88,14 @@ function game() {
     function shuffleDeck(deck) {
         return deck.sort(() => Math.random() - 0.5);
     }
-    const shuffledDeck = shuffleDeck(deck);
 
-    const Player1 = new Player(100, 100, 0, 100, shuffledDeck.slice(0, 3), []);
-    const PC = new Player(100, 100, 0, 100, shuffledDeck.slice(3, 6), []);
+    function dealCards(shuffledDeck, player, bot) {
+        player.cards = shuffledDeck.slice(0, 3);
+        bot.cards = shuffledDeck.slice(3, 6);
+    }
+
+    const Player1 = new Player(100, 100, 0, 100, [], []);
+    const PC = new Player(100, 100, 0, 100, [], []);
 
     console.log(`Tus estadísticas:`);
     Player1.showStats();
@@ -97,7 +103,19 @@ function game() {
     console.log(`-------------------------------------------------`);
 
     let playerPoints = 0;
+    let trickPlayerPoints = 0;
     let botPoints = 0;
+    let trickBotPoints = 0;
+
+    function updateTrickPoints() {
+        trickPlayerPointsElement.textContent = trickPlayerPoints;
+        trickBotPointsElement.textContent = trickBotPoints;
+    }
+
+    function clearTrickPoints() {
+        trickBotPoints = 0;
+        trickPlayerPoints = 0;
+    }
 
     function updatePoints() {
         playerPointsElement.textContent = playerPoints;
@@ -116,40 +134,53 @@ function game() {
         }
     }
 
-    for(let i = 0; i < 3; i++) {
-        console.log(`-------------------------------------------------`);
-        console.log(`Mano N°${i + 1}`);
-
-        console.log(`Tus cartas:`);
-        for(let j=0; j < Player1.cards.length; j++) {
-            console.log(`${j+1}) ${Player1.cards[j].number} de ${Player1.cards[j].suit}`);
+    while(playerPoints < 15 && botPoints < 15) {
+        const shuffledDeck = shuffleDeck(deck);
+        dealCards(shuffledDeck, Player1, PC);
+        for(let i = 0; i < 3; i++) {
+            clearTrickPoints();
+            console.log(`-------------------------------------------------`);
+            console.log(`Mano N°${i + 1}`);
+    
+            console.log(`Tus cartas:`);
+            for(let j=0; j < Player1.cards.length; j++) {
+                console.log(`${j+1}) ${Player1.cards[j].number} de ${Player1.cards[j].suit}`);
+            }
+    
+            console.log(`-------------------------------------------------`);
+    
+            console.log(`Selecciona arriba la posición de la carta que quieres lanzar.`);
+    
+            const input = prompt("Ingresa la posición de la carta:");
+            const index = parseInt(input) - 1;
+            const playerCardThrowed = Player1.cards.splice(index, 1);
+            console.log(`Jugaste la carta ${playerCardThrowed[0].number} de ${playerCardThrowed[0].suit}`);
+            
+            const botCardThrowed = PC.cards.pop();
+            console.log(`La computadora jugó ${botCardThrowed.number} de ${botCardThrowed.suit}`);
+    
+            const trickWinner = winner(playerCardThrowed[0].value, botCardThrowed.value);
+    
+            if(trickWinner === "player") {
+                trickPlayerPoints += 1;
+                console.log(`¡Ganaste la mano!`);
+            } 
+            else if(trickWinner === "bot") {
+                trickBotPoints += 1;
+                console.log(`La computadora ganó la mano`);
+            }
+            else {
+                console.log(`Empataste la mano`);
+            }
+                
+            updateTrickPoints();
         }
-
-        console.log(`-------------------------------------------------`);
-
-        console.log(`Selecciona arriba la posición de la carta que quieres lanzar.`);
-
-        const input = prompt("Ingresa la posición de la carta:");
-        const index = parseInt(input) - 1;
-        const playerCardThrowed = Player1.cards.splice(index, 1);
-        console.log(`Jugaste la carta ${playerCardThrowed[0].number} de ${playerCardThrowed[0].suit}`);
-        
-        const botCardThrowed = PC.cards.pop();
-        console.log(`La computadora jugó ${botCardThrowed.number} de ${botCardThrowed.suit}`);
-
-        const trickWinner = winner(playerCardThrowed[0].value, botCardThrowed.value);
-
-        if(trickWinner === "player") {
+        if(trickPlayerPoints > trickBotPoints) {
             playerPoints += 1;
-            console.log(`¡Ganaste la mano!`);
-        } 
-        else if(trickWinner === "bot") {
+        } else {
             botPoints += 1;
-            console.log(`La computadora ganó la mano`);
         }
-        else {
-            console.log(`Empataste la mano`);
-        }
+        updatePoints();
     }
 }
 
