@@ -76,10 +76,10 @@ const deck = [
 ]
 
 function game() {
-    const trickPlayerPointsElement = document.getElementById("trick-player-points");
-    const trickBotPointsElement = document.getElementById("trick-bot-points");
     const playerPointsElement = document.getElementById("player-points");
     const botPointsElement = document.getElementById("bot-points");
+    const playerLifeElement = document.getElementById("player-life");
+    const botLifeElement = document.getElementById("bot-life");
 
     console.log(`🗡¡Bienvenido a Trooco!🗡`);
 
@@ -97,24 +97,28 @@ function game() {
     const Player1 = new Player(100, 100, 0, 100, [], []);
     const PC = new Player(100, 100, 0, 100, [], []);
 
+
     console.log(`Tus estadísticas:`);
     Player1.showStats();
 
     console.log(`-------------------------------------------------`);
 
+    let playerLife = Player1.life;
+    let botLife = PC.life;
     let playerPoints = 0;
-    let trickPlayerPoints = 0;
-    let botPoints = 0;
-    let trickBotPoints = 0;
+    let botPoints = 0
 
-    function updateTrickPoints() {
-        trickPlayerPointsElement.textContent = trickPlayerPoints;
-        trickBotPointsElement.textContent = trickBotPoints;
+    function updateLife() {
+        const playerLifeValue = Math.max(0, Math.min(100, Player1.life));
+        const botLifeValue = Math.max(0, Math.min(100, PC.life));
+    
+        document.getElementById("player-life").value = playerLifeValue;
+        document.getElementById("bot-life").value = botLifeValue;
     }
 
     function clearTrickPoints() {
-        trickBotPoints = 0;
-        trickPlayerPoints = 0;
+        botPoints = 0;
+        playerPoints = 0;
     }
 
     function updatePoints() {
@@ -134,11 +138,12 @@ function game() {
         }
     }
 
-    while(playerPoints < 15 && botPoints < 15) {
+    function playRound() {
+
         const shuffledDeck = shuffleDeck(deck);
         dealCards(shuffledDeck, Player1, PC);
+
         for(let i = 0; i < 3; i++) {
-            clearTrickPoints();
             console.log(`-------------------------------------------------`);
             console.log(`Mano N°${i + 1}`);
     
@@ -162,26 +167,43 @@ function game() {
             const trickWinner = winner(playerCardThrowed[0].value, botCardThrowed.value);
     
             if(trickWinner === "player") {
-                trickPlayerPoints += 1;
+                playerPoints += 1;
                 console.log(`¡Ganaste la mano!`);
             } 
             else if(trickWinner === "bot") {
-                trickBotPoints += 1;
+                botPoints += 1;
                 console.log(`La computadora ganó la mano`);
             }
             else {
                 console.log(`Empataste la mano`);
             }
-                
-            updateTrickPoints();
+
+            updatePoints();
         }
-        if(trickPlayerPoints > trickBotPoints) {
-            playerPoints += 1;
+
+        if (playerPoints > botPoints) {
+            PC.life = Math.max(0, PC.life - 25);
+            console.log(`-------------------------------------------------`);
+            console.log(`¡Ganaste la ronda!`);
         } else {
-            botPoints += 1;
+            Player1.life = Math.max(0, Player1.life - 25);
+            console.log(`-------------------------------------------------`);
+            console.log(`Perdiste la ronda`);
         }
-        updatePoints();
+
+        updateLife();
+
+        if(Player1.life <= 0) {
+            alert("El bot ganó la partida.");
+        } else if(PC.life <= 0) {
+            alert("¡Ganaste la partida!");
+        } else {
+            clearTrickPoints();
+            setTimeout(playRound, 3000); 
+        }
     }
+    playRound();
+
 }
 
 game();
