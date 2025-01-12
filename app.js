@@ -156,8 +156,17 @@ function game() {
     
             console.log(`Selecciona arriba la posición de la carta que quieres lanzar.`);
     
-            const input = prompt("Ingresa la posición de la carta:");
-            const index = parseInt(input) - 1;
+            let input;
+            let index;
+            do {
+                input = prompt(`Ingresa la posición de la carta:`);
+                index = parseInt(input) - 1;
+
+                if (isNaN(index) || index < 0 || index >= Player1.cards.length) {
+                    alert(`Por favor, ingresa un número entre 1 y ${Player1.cards.length}.`);
+                }
+            } while (isNaN(index) || index < 0 || index >= Player1.cards.length);
+
             const playerCardThrowed = Player1.cards.splice(index, 1);
             console.log(`Jugaste la carta ${playerCardThrowed[0].number} de ${playerCardThrowed[0].suit}`);
             
