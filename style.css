@@ -64,6 +64,14 @@ body {
     align-items: center;
 }
 
+#stats div {
+    height: 100%;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
 progress {
     appearance: none;
     -webkit-appearance: none;
@@ -71,7 +79,7 @@ progress {
     border: none;
 }
 
-#player-life, #bot-life{
+#player-life, #bot-life {
     width: 300px;
     height: 25px;
 }
@@ -82,4 +90,13 @@ progress {
 
 #bot-life::-webkit-progress-value {
     background-color: #f44336;
+}
+
+#player-armor, #bot_armor {
+    width: 200px;
+    height: 20px;
+}
+
+#player-armor::-webkit-progress-value, #bot-armor::-webkit-progress-value {
+    background-color: rgb(60, 60, 60);
 }

@@ -78,8 +78,6 @@ const deck = [
 function game() {
     const playerPointsElement = document.getElementById("player-points");
     const botPointsElement = document.getElementById("bot-points");
-    const playerLifeElement = document.getElementById("player-life");
-    const botLifeElement = document.getElementById("bot-life");
 
     console.log(`🗡¡Bienvenido a Trooco!🗡`);
 
@@ -103,8 +101,6 @@ function game() {
 
     console.log(`-------------------------------------------------`);
 
-    let playerLife = Player1.life;
-    let botLife = PC.life;
     let playerPoints = 0;
     let botPoints = 0
 
@@ -114,6 +110,14 @@ function game() {
     
         document.getElementById("player-life").value = playerLifeValue;
         document.getElementById("bot-life").value = botLifeValue;
+    }
+
+    function updateArmor() {
+        const playerArmorValue = Math.max(0, Math.min(100, Player1.armor));
+        const botArmorValue = Math.max(0, Math.min(100, PC.armor));
+    
+        document.getElementById("player-armor").value = playerArmorValue;
+        document.getElementById("bot-armor").value = botArmorValue;
     }
 
     function clearTrickPoints() {
@@ -191,16 +195,25 @@ function game() {
         }
 
         if (playerPoints > botPoints) {
-            PC.life = Math.max(0, PC.life - 25);
-            console.log(`-------------------------------------------------`);
-            console.log(`¡Ganaste la ronda!`);
+            if(PC.armor > 0) {
+                PC.armor = Math.max(0, PC.armor - 50);
+            } else {
+                PC.life = Math.max(0, PC.life - 25);
+                console.log(`-------------------------------------------------`);
+                console.log(`¡Ganaste la ronda!`);
+            }
         } else {
-            Player1.life = Math.max(0, Player1.life - 25);
-            console.log(`-------------------------------------------------`);
-            console.log(`Perdiste la ronda`);
+            if(Player1.armor > 0) {
+                Player1.armor = Math.max(0, Player1.armor - 50);
+            } else {
+                Player1.life = Math.max(0, Player1.life - 25);
+                console.log(`-------------------------------------------------`);
+                console.log(`Perdiste la ronda`);
+            }
         }
 
         updateLife();
+        updateArmor();
 
         if(Player1.life <= 0) {
             alert("El bot ganó la partida.");
