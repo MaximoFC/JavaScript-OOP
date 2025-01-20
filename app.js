@@ -5,11 +5,16 @@ class Player {
         this.attack = attack,
         this.gold = gold,
         this.cards = cards,
-        this.upgrades = upgrades
+        this.upgrades = upgrades,
+        this.hand = false
     }
 
     showStats() {
         console.log(`Vida: ${this.life} - Armadura: ${this.armor} - Ataque: ${this.attack} - Oro: ${this.gold}`);
+    }
+
+    showHand() {
+        console.log(`Eres mano: ${this.hand}`);
     }
 
     throwCard() {
@@ -95,6 +100,17 @@ function game() {
     const Player1 = new Player(100, 100, 0, 100, [], []);
     const PC = new Player(100, 100, 0, 100, [], []);
 
+    function flipCoin() {
+        const result = Math.random();
+        if(result < 0.5) {
+            Player1.hand = true;
+            PC.hand = false;
+
+        } else {
+            PC.hand = true;
+            Player1.hand = false;
+        }
+    }
 
     console.log(`Tus estadísticas:`);
     Player1.showStats();
@@ -143,7 +159,8 @@ function game() {
     }
 
     function playRound() {
-
+        flipCoin();
+        Player1.showHand();
         const shuffledDeck = shuffleDeck(deck);
         dealCards(shuffledDeck, Player1, PC);
 
@@ -202,13 +219,31 @@ function game() {
                 console.log(`-------------------------------------------------`);
                 console.log(`¡Ganaste la ronda!`);
             }
-        } else {
+        } else if (botPoints > playerPoints) {
             if(Player1.armor > 0) {
                 Player1.armor = Math.max(0, Player1.armor - 50);
             } else {
                 Player1.life = Math.max(0, Player1.life - 25);
                 console.log(`-------------------------------------------------`);
                 console.log(`Perdiste la ronda`);
+            }
+        } else {
+            if(Player1.hand == true) {
+                if(PC.armor > 0) {
+                    PC.armor = Math.max(0, PC.armor - 50);
+                } else {
+                    PC.life = Math.max(0, PC.life - 25);
+                    console.log(`-------------------------------------------------`);
+                    console.log(`¡Ganaste la ronda por ser mano!`);
+                }
+            } else {
+                if(Player1.armor > 0) {
+                    Player1.armor = Math.max(0, Player1.armor - 50);
+                } else {
+                    Player1.life = Math.max(0, Player1.life - 25);
+                    console.log(`-------------------------------------------------`);
+                    console.log(`Perdiste la ronda, el bot era mano`);
+                }
             }
         }
 
