@@ -97,8 +97,8 @@ function game() {
         bot.cards = shuffledDeck.slice(3, 6);
     }
 
-    const Player1 = new Player(100, 100, 0, 100, [], []);
-    const PC = new Player(100, 100, 0, 100, [], []);
+    const Player1 = new Player(100, 100, 0, 0, [], []);
+    const PC = new Player(100, 100, 0, 0, [], []);
 
     function flipCoin() {
         const result = Math.random();
@@ -198,10 +198,12 @@ function game() {
     
             if(trickWinner === "player") {
                 playerPoints += 1;
+                Player1.gold += 100;
                 console.log(`¡Ganaste la mano!`);
             } 
             else if(trickWinner === "bot") {
                 botPoints += 1;
+                PC.gold += 100;
                 console.log(`La computadora ganó la mano`);
             }
             else {
@@ -216,34 +218,38 @@ function game() {
                 PC.armor = Math.max(0, PC.armor - 50);
             } else {
                 PC.life = Math.max(0, PC.life - 25);
-                console.log(`-------------------------------------------------`);
-                console.log(`¡Ganaste la ronda!`);
             }
+            Player1.gold += 200;
+            console.log(`-------------------------------------------------`);
+            console.log(`¡Ganaste la ronda!`);
         } else if (botPoints > playerPoints) {
             if(Player1.armor > 0) {
                 Player1.armor = Math.max(0, Player1.armor - 50);
             } else {
                 Player1.life = Math.max(0, Player1.life - 25);
-                console.log(`-------------------------------------------------`);
-                console.log(`Perdiste la ronda`);
             }
+            PC.gold += 200;
+            console.log(`-------------------------------------------------`);
+            console.log(`Perdiste la ronda`);
         } else {
             if(Player1.hand == true) {
                 if(PC.armor > 0) {
                     PC.armor = Math.max(0, PC.armor - 50);
                 } else {
                     PC.life = Math.max(0, PC.life - 25);
-                    console.log(`-------------------------------------------------`);
-                    console.log(`¡Ganaste la ronda por ser mano!`);
                 }
+                Player1.gold += 100;
+                console.log(`-------------------------------------------------`);
+                console.log(`¡Ganaste la ronda por ser mano!`);
             } else {
                 if(Player1.armor > 0) {
                     Player1.armor = Math.max(0, Player1.armor - 50);
                 } else {
                     Player1.life = Math.max(0, Player1.life - 25);
-                    console.log(`-------------------------------------------------`);
-                    console.log(`Perdiste la ronda, el bot era mano`);
                 }
+                PC.gold += 100;
+                console.log(`-------------------------------------------------`);
+                console.log(`Perdiste la ronda, el bot era mano`);
             }
         }
 
@@ -251,9 +257,9 @@ function game() {
         updateArmor();
 
         if(Player1.life <= 0) {
-            alert("El bot ganó la partida.");
+            alert("El bot ganó la partida." + PC.gold);
         } else if(PC.life <= 0) {
-            alert("¡Ganaste la partida!");
+            alert("¡Ganaste la partida!" + Player1.gold);
         } else {
             clearTrickPoints();
             setTimeout(playRound, 3000); 
